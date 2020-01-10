@@ -5,10 +5,28 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
+/**
+ * An abstract super class for all {@link ConcurrentMap} implementation encapsulating all common
+ * operations.
+ *
+ * @param <K> The map key type.
+ * @param <V> The map value type.
+ */
 public abstract class AbstractConcurrentMap<K, V> implements ConcurrentMap<K, V> {
 
+    /**
+     * The initial number of buckets. This is, in fact, a magic number, shamelessly.
+     */
     protected static final int INITIAL_CAP = 100;
+
+    /**
+     * Represents the buckets and their chained elements.
+     */
     protected List<Entry<K, V>>[] table;
+
+    /**
+     * How many elements are stored in the map?
+     */
     protected int size = 0;
 
     @SuppressWarnings("unchecked")
@@ -19,12 +37,28 @@ public abstract class AbstractConcurrentMap<K, V> implements ConcurrentMap<K, V>
         }
     }
 
+    /**
+     * Tries to acquire a lock to perform an operation on the given {@code entry}.
+     *
+     * @param entry The entry to block on.
+     */
     protected abstract void acquire(Entry<K, V> entry);
 
+    /**
+     * Tries to release a lock after performing some operation on the given {@code entry}.
+     *
+     * @param entry The entry to release the lock for.
+     */
     protected abstract void release(Entry<K, V> entry);
 
+    /**
+     * @return Whether should we add more buckets to the hash table?
+     */
     protected abstract boolean shouldResize();
 
+    /**
+     * Adds more buckets to the hash table.
+     */
     protected abstract void resize();
 
     @Override

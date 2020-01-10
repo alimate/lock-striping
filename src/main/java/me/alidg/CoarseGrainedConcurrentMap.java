@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * A very simple {@link ConcurrentMap} implementation the uses one lock to synchronize all operations.
+ *
+ * @param <K> The map key type.
+ * @param <V> The map value type.
+ */
 public final class CoarseGrainedConcurrentMap<K, V> extends AbstractConcurrentMap<K, V> {
 
     private final ReentrantLock lock;
@@ -35,7 +41,7 @@ public final class CoarseGrainedConcurrentMap<K, V> extends AbstractConcurrentMa
             var doubledCapacity = oldTable.length * 2;
 
             table = (List<Entry<K, V>>[]) new List[doubledCapacity];
-            for (int i = 0; i < doubledCapacity; i++) {
+            for (var i = 0; i < doubledCapacity; i++) {
                 table[i] = new ArrayList<>();
             }
 
