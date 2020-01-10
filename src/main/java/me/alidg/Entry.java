@@ -2,7 +2,7 @@ package me.alidg;
 
 import java.util.Objects;
 
-public final class Entry<K, V> {
+final class Entry<K, V> {
 
     private final K key;
     private final V value;

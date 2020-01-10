@@ -13,8 +13,9 @@ public interface ConcurrentMap<K, V> {
      *
      * @param key   The key to add.
      * @param value The corresponding value for the given key.
+     * @return true if successfully managed to add the requested element, false otherwise.
      */
-    void put(K key, V value);
+    boolean put(K key, V value);
 
     /**
      * Returns the value of the given {@code key}.
