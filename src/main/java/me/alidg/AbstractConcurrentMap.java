@@ -17,7 +17,7 @@ public abstract class AbstractConcurrentMap<K, V> implements ConcurrentMap<K, V>
     /**
      * The initial number of buckets. This is, in fact, a magic number, shamelessly.
      */
-    protected static final int INITIAL_CAP = 100;
+    protected static final int INITIAL_CAPACITY = 100;
 
     /**
      * Represents the buckets and their chained elements.
@@ -31,8 +31,8 @@ public abstract class AbstractConcurrentMap<K, V> implements ConcurrentMap<K, V>
 
     @SuppressWarnings("unchecked")
     public AbstractConcurrentMap() {
-        table = (List<Entry<K, V>>[]) new List[INITIAL_CAP];
-        for (int i = 0; i < INITIAL_CAP; i++) {
+        table = (List<Entry<K, V>>[]) new List[INITIAL_CAPACITY];
+        for (int i = 0; i < INITIAL_CAPACITY; i++) {
             table[i] = new ArrayList<>();
         }
     }
@@ -104,7 +104,10 @@ public abstract class AbstractConcurrentMap<K, V> implements ConcurrentMap<K, V>
         var entry = new Entry<K, V>(key, null);
         acquire(entry);
         try {
-            return table[findBucket(entry)].remove(entry);
+            boolean result = table[findBucket(entry)].remove(entry);
+            if (result) size--;
+
+            return result;
         } finally {
             release(entry);
         }

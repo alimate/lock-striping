@@ -27,8 +27,8 @@ public final class LockStripedConcurrentMap<K, V> extends AbstractConcurrentMap<
      */
     public LockStripedConcurrentMap() {
         super();
-        locks = new ReentrantLock[INITIAL_CAP];
-        for (int i = 0; i < INITIAL_CAP; i++) {
+        locks = new ReentrantLock[INITIAL_CAPACITY];
+        for (int i = 0; i < INITIAL_CAPACITY; i++) {
             locks[i] = new ReentrantLock();
         }
     }
