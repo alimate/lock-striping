@@ -65,22 +65,23 @@ public abstract class AbstractConcurrentMap<K, V> implements ConcurrentMap<K, V>
     public boolean put(K key, V value) {
         if (key == null) return false;
 
-        var result = false;
         var entry = new Entry<>(key, value);
         acquire(entry);
         try {
             var bucketNumber = findBucket(entry);
-            if (!table[bucketNumber].contains(entry)) {
+            var currentPosition = table[bucketNumber].indexOf(entry);
+            if (currentPosition == -1) {
                 table[bucketNumber].add(entry);
                 size++;
-                result = true;
+            } else {
+                table[bucketNumber].add(currentPosition, entry);
             }
         } finally {
             release(entry);
         }
 
         if (shouldResize()) resize();
-        return result;
+        return true;
     }
 
     @Override
