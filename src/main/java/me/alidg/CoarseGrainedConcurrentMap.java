@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+import static java.lang.Math.abs;
+
 /**
  * A very simple {@link ConcurrentMap} implementation the uses one lock to synchronize all operations.
  *
@@ -29,10 +31,12 @@ public final class CoarseGrainedConcurrentMap<K, V> extends AbstractConcurrentMa
         lock.unlock();
     }
 
+    @Override
     protected boolean shouldResize() {
         return size / table.length >= 5;
     }
 
+    @Override
     @SuppressWarnings({"unchecked", "DuplicatedCode"})
     protected void resize() {
         lock.lock();
@@ -47,7 +51,8 @@ public final class CoarseGrainedConcurrentMap<K, V> extends AbstractConcurrentMa
 
             for (var entries : oldTable) {
                 for (var entry : entries) {
-                    table[findBucket(entry)].add(entry);
+                    var newBucketNumber = abs(entry.hashCode()) % doubledCapacity;
+                    table[newBucketNumber].add(entry);
                 }
             }
         } finally {

@@ -84,7 +84,8 @@ public final class LockStripedConcurrentMap<K, V> extends AbstractConcurrentMap<
 
             for (var entries : oldTable) {
                 for (var entry : entries) {
-                    table[findBucket(entry)].add(entry);
+                    var newBucketNumber = abs(entry.hashCode()) % doubledCapacity;
+                    table[newBucketNumber].add(entry);
                 }
             }
         } finally {
